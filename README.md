@@ -78,8 +78,7 @@ Set the file properties in Visual Studio to:
 
 ## Project Background
 
-This application was created as an educational C# project to practice working with external APIs, asynchronous requests, JSON and XML processing, WPF, MVVM and media streaming.
-
+This application was created as a creative educational C# project to practice working with external APIs.
 A major focus of the project was combining multiple external services:
 
-**Search → Select → Stream → AI Information**
+**Search → Select → Stream → AI Description Information**
