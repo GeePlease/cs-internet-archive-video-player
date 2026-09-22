@@ -74,7 +74,7 @@ Set the file properties in Visual Studio to:
 * **Build Action:** Content
 * **Copy to Output Directory:** Copy if newer
 
-`appsettings.Local.json` is excluded from Git to prevent API keys from being committed or published.
+!!! `appsettings.Local.json` must be excluded from Git to prevent API keys from being committed or published !!!
 
 ## Project Background
 
