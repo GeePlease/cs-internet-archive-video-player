@@ -2,7 +2,7 @@
 
 A C# WPF application for searching and streaming videos from the Internet Archive, with AI-generated background information powered by Google Gemini.
 
-![Internet Archive Video Player](assets/Screenshot.png)
+![Internet Archive Video Player](CS_09_01_API_VideoPlayer/assets/Screenshot.png)
 
 > **Note:** The Gemini-powered description feature may occasionally be unavailable due to high API demand (server overloaded).
 > In this case, video search and playback continue to work independently.
