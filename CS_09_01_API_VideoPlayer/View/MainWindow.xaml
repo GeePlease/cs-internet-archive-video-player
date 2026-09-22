@@ -1,0 +1,482 @@
+﻿<Window x:Class="CS_09_01_API_VideoPlayer.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CS_09_01_API_VideoPlayer.View"
+        xmlns:vm="clr-namespace:CS_09_01_API_VideoPlayer.ViewModel"
+        xmlns:vlc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
+        mc:Ignorable="d"
+        Title="Archive Movie Player" Height="600" Width="1050"
+        ResizeMode="NoResize"
+        Background="#12100F"
+        FontFamily="Segoe UI">
+
+    <!-- ========================================== -->
+    <!-- RETRO CINEMA THEME                         -->
+    <!-- ========================================== -->
+    <Window.Resources>
+
+        <!-- Colors -->
+        <SolidColorBrush x:Key="BackgroundBrush" Color="#12100F"/>
+        <SolidColorBrush x:Key="PanelBrush" Color="#211C19"/>
+        <SolidColorBrush x:Key="PanelLightBrush" Color="#302824"/>
+
+        <SolidColorBrush x:Key="TextBrush" Color="#F2E8D5"/>
+        <SolidColorBrush x:Key="SecondaryTextBrush" Color="#D6C9B5"/>
+
+        <SolidColorBrush x:Key="GoldBrush" Color="#D9B76E"/>
+        <SolidColorBrush x:Key="BordeauxBrush" Color="#8C3545"/>
+        <SolidColorBrush x:Key="SelectionBrush" Color="#A84355"/>
+        <SolidColorBrush x:Key="HoverBrush" Color="#3A302B"/>
+
+
+        <!-- Player Buttons -->
+        <Style x:Key="PlayerButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource SecondaryTextBrush}"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="Margin" Value="2,0"/>
+            <Setter Property="FontFamily" Value="Georgia"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="{StaticResource GoldBrush}"/>
+                </Trigger>
+
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Foreground" Value="{StaticResource SelectionBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+
+        <!-- Retro Player Slider -->
+        <Style x:Key="PlayerSliderStyle" TargetType="Slider">
+            <Setter Property="Foreground" Value="{StaticResource GoldBrush}"/>
+            <Setter Property="Background" Value="#51463F"/>
+            <Setter Property="Height" Value="18"/>
+            <Setter Property="Cursor" Value="Hand"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+
+                        <Grid>
+
+                            <!-- Slider Track Background -->
+                            <Border Height="4"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="2"
+                                    VerticalAlignment="Center"/>
+
+                            <Track x:Name="PART_Track">
+
+                                <!-- Filled Part -->
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Command="Slider.DecreaseLarge"
+                                                  Background="{StaticResource GoldBrush}"
+                                                  BorderThickness="0"
+                                                  Height="4">
+
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="RepeatButton">
+                                                <Border Background="{TemplateBinding Background}"
+                                                        CornerRadius="2"/>
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+
+                                    </RepeatButton>
+                                </Track.DecreaseRepeatButton>
+
+
+                                <!-- Slider Thumb -->
+                                <Track.Thumb>
+                                    <Thumb Width="14" Height="14">
+
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Ellipse Fill="{StaticResource GoldBrush}"
+                                                         Stroke="{StaticResource TextBrush}"
+                                                         StrokeThickness="1"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+
+                                    </Thumb>
+                                </Track.Thumb>
+
+
+                                <!-- Remaining Part -->
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Command="Slider.IncreaseLarge"
+                                                  Background="Transparent"
+                                                  BorderThickness="0"
+                                                  Height="4">
+
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="RepeatButton">
+                                                <Border Background="Transparent"/>
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+
+                                    </RepeatButton>
+                                </Track.IncreaseRepeatButton>
+
+                            </Track>
+
+                        </Grid>
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <!-- Search Button -->
+        <Style x:Key="SearchButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource BordeauxBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="{StaticResource GoldBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="17"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource SelectionBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+
+        <!-- Result Items -->
+        <Style TargetType="ListViewItem">
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="7"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Cursor" Value="Hand"/>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource HoverBrush}"/>
+                </Trigger>
+
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{StaticResource SelectionBrush}"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+    </Window.Resources>
+
+
+    <!-- Data Context MainWindowViewModel -->
+    <Window.DataContext>
+        <vm:MainWindowViewModel/>
+    </Window.DataContext>
+
+
+    <!-- ========================================== -->
+    <!-- MAIN LAYOUT                                -->
+    <!-- ========================================== -->
+    <Grid>
+
+        <Grid HorizontalAlignment="Center" Height="560"
+              VerticalAlignment="Center" Width="1020">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="680*"/>
+                <ColumnDefinition Width="340*"/>
+            </Grid.ColumnDefinitions>
+
+
+            <!-- ========================================== -->
+            <!-- LEFT PANEL                                 -->
+            <!-- ========================================== -->
+
+            <Border Grid.Column="0"
+                    Background="{StaticResource PanelBrush}"
+                    BorderBrush="{StaticResource GoldBrush}"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Margin="15,15,10,15"
+                    Padding="10"/>
+
+
+            <!-- ========================================== -->
+            <!-- VIDEO PLAYER                               -->
+            <!-- ========================================== -->
+
+            <Border Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    Height="400" Width="630"
+                    Margin="0,30,0,0"
+                    VerticalAlignment="Top"
+                    Background="Black"
+                    BorderBrush="{StaticResource GoldBrush}"
+                    BorderThickness="1"
+                    CornerRadius="4">
+
+                <Border.Effect>
+                    <DropShadowEffect Color="Black"
+                                      BlurRadius="14"
+                                      ShadowDepth="4"
+                                      Opacity="0.75"/>
+                </Border.Effect>
+
+                <Grid>
+
+                    <!-- Thumbnail -->
+                    <Image Source="{Binding SelectedVideo.ThumbnailUrl}"
+                           Width="220" Height="160"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Stretch="UniformToFill"/>
+
+
+                    <!-- VLC Video Player -->
+                    <vlc:VideoView x:Name="videoView">
+
+                        <!-- Player Controls Overlay -->
+                        <Grid VerticalAlignment="Bottom"
+                              HorizontalAlignment="Stretch"
+                              Height="70"
+                              Background="#E612100F">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="45"/>
+                            </Grid.RowDefinitions>
+
+
+                            <!-- Gold Separator -->
+                            <Border Grid.Row="0"
+                                    Height="1"
+                                    Background="{StaticResource GoldBrush}"
+                                    VerticalAlignment="Top"
+                                    Opacity="0.7"/>
+
+
+                            <!-- Video Position Slider Bar -->
+                            <Slider x:Name="positionSlider"
+                                    Grid.Row="0"
+                                    Minimum="0"
+                                    Maximum="100"
+                                    Value="0"
+                                    Margin="10,3"
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource PlayerSliderStyle}"
+                                    ValueChanged="PositionSlider_ValueChanged"/>
+
+
+                            <!-- Bottom Controls -->
+                            <Grid Grid.Row="1">
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+
+                                <!-- Play / Pause -->
+                                <StackPanel Grid.Column="0"
+                                            Orientation="Horizontal"
+                                            VerticalAlignment="Center"
+                                            Margin="8,0,0,0">
+
+                                    <Button Content="Play"
+                                            Click="Play_Click"
+                                            Style="{StaticResource PlayerButtonStyle}"/>
+
+                                    <Button Content="Pause"
+                                            Click="Pause_Click"
+                                            Style="{StaticResource PlayerButtonStyle}"/>
+
+                                </StackPanel>
+
+
+                                <!-- Volume -->
+                                <StackPanel Grid.Column="2"
+                                            Orientation="Horizontal"
+                                            VerticalAlignment="Center"
+                                            Margin="0,0,12,0">
+
+                                    <TextBlock Text="VOL"
+                                               Foreground="{StaticResource SecondaryTextBrush}"
+                                               FontFamily="Georgia"
+                                               FontSize="11"
+                                               FontWeight="Bold"
+                                               VerticalAlignment="Center"
+                                               Margin="0,0,8,0"/>
+
+                                    <Slider x:Name="volumeSlider"
+                                            Minimum="0"
+                                            Maximum="100"
+                                            Value="100"
+                                            Width="100"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource PlayerSliderStyle}"
+                                            ValueChanged="VolumeSlider_ValueChanged"/>
+
+                                </StackPanel>
+
+                            </Grid>
+
+                        </Grid>
+
+                    </vlc:VideoView>
+
+                </Grid>
+
+            </Border>
+
+
+            <!-- ========================================== -->
+            <!-- AI FILM INFO                               -->
+            <!-- ========================================== -->
+
+            <Border Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    Margin="0,445,0,0"
+                    VerticalAlignment="Top"
+                    Height="75"
+                    Width="630"
+                    BorderBrush="{StaticResource GoldBrush}"
+                    BorderThickness="0,1,0,0"
+                    Padding="4,7,4,0">
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled">
+
+                    <TextBlock x:Name="txtBlock_ItemInfos"
+                               Text="{Binding AiDescription}"
+                               TextWrapping="Wrap"
+                               Foreground="{StaticResource TextBrush}"
+                               FontFamily="Segoe UI"
+                               FontSize="16"/>
+
+                </ScrollViewer>
+
+            </Border>
+
+
+            <!-- ========================================== -->
+            <!-- RIGHT SIDE / ARCHIVE SEARCH                -->
+            <!-- ========================================== -->
+
+            <!-- Search Title -->
+            <TextBlock Grid.Column="1"
+                       Text="SEARCH THE ARCHIVE"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Margin="15,8,0,0"
+                       Foreground="{StaticResource GoldBrush}"
+                       FontFamily="Georgia"
+                       FontSize="14"
+                       FontWeight="Bold"/>
+
+
+            <!-- Search Bar -->
+            <TextBox x:Name="txtBox_search"
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                     Grid.Column="1"
+                     HorizontalAlignment="Left"
+                     VerticalAlignment="Top"
+                     Height="38"
+                     Width="310"
+                     Margin="15,30,0,0"
+                     Padding="8,0"
+                     TextChanged="TextBox_TextChanged"
+                     FontFamily="Segoe UI"
+                     FontSize="17"
+                     Background="{StaticResource PanelLightBrush}"
+                     Foreground="{StaticResource TextBrush}"
+                     CaretBrush="{StaticResource GoldBrush}"
+                     BorderBrush="{StaticResource GoldBrush}"
+                     BorderThickness="1"
+                     VerticalContentAlignment="Center"/>
+
+
+            <!-- Search Button -->
+            <Button x:Name="btn_search"
+                    Command="{Binding TriggerSearchCommand}"
+                    Grid.Column="1"
+                    Content="SEARCH"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Height="38"
+                    Width="310"
+                    Margin="15,78,0,0"
+                    Style="{StaticResource SearchButtonStyle}"/>
+
+
+            <!-- Results Header -->
+            <StackPanel Grid.Column="1"
+                        Orientation="Vertical"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Margin="15,128,0,0">
+
+                <TextBlock Text="ARCHIVE RESULTS"
+                           FontFamily="Georgia"
+                           FontSize="14"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource GoldBrush}"/>
+
+                <Border Width="310"
+                        Height="1"
+                        Background="{StaticResource GoldBrush}"
+                        Margin="0,5,0,0"/>
+
+            </StackPanel>
+
+
+            <!-- ========================================== -->
+            <!-- RESULT LIST                                -->
+            <!-- ========================================== -->
+
+            <ListView x:Name="listView_results"
+                      Grid.Column="1"
+                      ItemsSource="{Binding VideoResults}"
+                      d:ItemsSource="{d:SampleData ItemCount=5}"
+                      SelectedItem="{Binding SelectedVideo}"
+                      Margin="15,155,15,15"
+                      Background="{StaticResource PanelBrush}"
+                      BorderBrush="{StaticResource GoldBrush}"
+                      BorderThickness="1"
+                      Foreground="{StaticResource TextBrush}"
+                      FontFamily="Segoe UI"
+                      FontSize="16">
+
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Title"
+                                        DisplayMemberBinding="{Binding Title}"
+                                        Width="295"/>
+                    </GridView>
+                </ListView.View>
+
+                <ListView.Resources>
+                    <Style TargetType="{x:Type GridViewColumnHeader}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </Style>
+                </ListView.Resources>
+
+            </ListView>
+
+        </Grid>
+
+    </Grid>
+
+</Window>
+

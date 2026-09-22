@@ -1,0 +1,92 @@
+# --- Visual Studio ---
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# --- JetBrains Rider / ReSharper ---
+.idea/
+*.sln.iml
+*.DotSettings.user
+_ReSharper.Caches/
+
+# --- Build-Ergebnisse & Ausgaben ---
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x86/
+x64/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bcl/
+publish/
+
+# --- Benutzer-spezifische Visual Studio Dateien ---
+*.userprefs
+*.csproj.user
+*.vbproj.user
+*.vcxproj.user
+*.dbmdl
+*.jfm
+
+# --- Visual Studio Test Results / Coverage ---
+*.testresults
+*.trx
+_VSTest_*/
+TestResults/
+coverage/
+coverage.*
+*.coverage
+*.coveragexml
+
+# --- NuGet ---
+[Pp]ackages/
+*.nupkg
+*.snupkg
+
+# Paket-Wiederherstellung erlauben
+!**/packages.config
+!NuGet.config
+
+# --- Lokale Konfiguration / API Keys / Secrets ---
+.env
+.env.*
+*.env
+appsettings.Local.json
+appsettings.*.local.json
+secrets.json
+Secrets/
+secrets/
+
+# --- Temporäre Dateien / Logs ---
+*.log
+*.tmp
+*.temp
+*.bak
+[Ll]ogs/
+
+# --- Lokale Datenbanken (falls später verwendet) ---
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# --- Betriebssysteme ---
+
+# Windows
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
