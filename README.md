@@ -79,6 +79,7 @@ Set the file properties in Visual Studio to:
 ## Project Background
 
 This application was created as a creative educational C# project to practice working with external APIs.
-A major focus of the project was combining multiple external services:
+A major focus of the project was combining multiple external services without paywalls or legal restrictions
+(Internet Archive is freely accessible digital archive).
 
 **Search → Select → Stream → AI Description Information**
