@@ -99,6 +99,7 @@ namespace CS_09_01_API_VideoPlayer.ViewModel
             // api mp4 filter for url
             string? mp4Url = await ArchiveApi.GetMP4UrlAsync(identifier);
 
+            // response null check
             if (!string.IsNullOrWhiteSpace(mp4Url))
             {
                 MediaPlayerSource = new Uri(mp4Url, UriKind.Absolute);
