@@ -63,7 +63,14 @@ namespace CS_09_01_API_VideoPlayer.ViewModel
             }
 
             // get result data
-            string result = await ArchiveApi.GetVideosAsync(SearchText);
+            string? result = await ArchiveApi.GetVideosAsync(SearchText);
+
+            // null check result data
+            if (string.IsNullOrWhiteSpace(result))
+            {
+                System.Diagnostics.Debug.WriteLine("Keine gültige API-Antwort erhalten.");
+                return;
+            }
 
             // turn into Video class compatible format withi JsonService Class
             var parsedList = JsonService.ParseVideoResponse(result);
